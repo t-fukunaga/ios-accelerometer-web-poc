@@ -2,6 +2,12 @@
 
 iOSデバイスの加速度センサーを使った2つのデモを体験できるWebアプリケーションです。
 
+## 🚀 デモサイト
+
+**https://t-fukunaga.github.io/ios-accelerometer-web-poc/**
+
+iPhoneのSafariで上記URLにアクセスして、すぐにデモを体験できます！
+
 ## ✨ 特徴
 
 ### 🔄 傾きセンサーモード
@@ -21,8 +27,12 @@ iOSデバイスの加速度センサーを使った2つのデモを体験でき�
 
 ## 🚀 使い方
 
-### ngrokを使った起動（推奨）
+### オンラインデモ（推奨）
+上記のデモサイトURLにiPhoneのSafariでアクセスするだけ！
 
+### ローカル開発
+
+#### ngrokを使った起動
 ```bash
 # HTTPサーバーを起動
 npm run dev
@@ -31,15 +41,14 @@ npm run dev
 ngrok http 8080
 ```
 
-### 直接HTTPサーバー起動
-
+#### 直接HTTPサーバー起動
 ```bash
 npm run dev
 ```
 
 ## 📱 iPhoneでの動作確認
 
-1. ngrokのHTTPS URLにiPhoneのSafariでアクセス
+1. **デモサイト**または**ngrokのHTTPS URL**にiPhoneのSafariでアクセス
 2. 「センサーを開始」ボタンをタップ
 3. 権限要求ダイアログが表示されたら「許可」をタップ
 4. タブを切り替えて各モードを体験：
