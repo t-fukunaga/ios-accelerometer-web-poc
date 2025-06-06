@@ -489,6 +489,84 @@
             margin-top: 20px;
             line-height: 1.6;
         }
+
+        /* 感度調整スライダー */
+        .sensitivity-control {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .sensitivity-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .sensitivity-value {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .sensitivity-slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .sensitivity-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .sensitivity-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+        }
+
+        .sensitivity-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .sensitivity-slider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+        }
+
+        .sensitivity-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -517,6 +595,19 @@
         <button id="startButton" class="start-button">
             センサーを開始
         </button>
+
+        <!-- 感度調整 -->
+        <div class="sensitivity-control">
+            <div class="sensitivity-label">
+                <span>🎚️ 感度調整</span>
+                <span class="sensitivity-value" id="sensitivityValue">x2.0</span>
+            </div>
+            <input type="range" class="sensitivity-slider" id="sensitivitySlider" 
+                   min="0.5" max="5" step="0.1" value="2">
+            <div class="sensitivity-description">
+                低感度 ← → 高感度
+            </div>
+        </div>
 
         <!-- タブ1: 傾きセンサー -->
         <div id="tiltContent" class="tab-content active">
@@ -624,6 +715,10 @@
         // 加速度データの履歴（ダウジング用）
         let accelerationHistory = [];
         let detectionLevel = 0;
+        
+        // 感度設定
+        let sensitivity = 2.0;
+        let tiltSensitivity = 1.0;
 
         // デバッグ情報を画面に表示
         function log(message) {
@@ -649,6 +744,14 @@
             const debugDiv = document.getElementById('debugInfo');
             debugDiv.classList.toggle('active', debugVisible);
             this.textContent = debugVisible ? '✖️' : '🔧';
+        });
+
+        // 感度スライダーのイベント
+        document.getElementById('sensitivitySlider').addEventListener('input', function(e) {
+            sensitivity = parseFloat(e.target.value);
+            tiltSensitivity = sensitivity / 2; // 傾きセンサーは控えめに
+            document.getElementById('sensitivityValue').textContent = 'x' + sensitivity.toFixed(1);
+            log(`感度を${sensitivity.toFixed(1)}倍に変更`);
         });
 
         // タブ切り替え
@@ -725,8 +828,8 @@
             const device = document.getElementById('device3d');
             if (!device) return;
             
-            const rotateX = -y * 3; // Y軸の傾きをX軸回転に
-            const rotateY = x * 3;  // X軸の傾きをY軸回転に
+            const rotateX = -y * 3 * tiltSensitivity; // Y軸の傾きをX軸回転に
+            const rotateY = x * 3 * tiltSensitivity;  // X軸の傾きをY軸回転に
             device.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         }
 
@@ -736,8 +839,8 @@
             if (!bubble) return;
             
             const maxOffset = 55; // 最大移動距離
-            const offsetX = (x / 10) * maxOffset;
-            const offsetY = (y / 10) * maxOffset;
+            const offsetX = (x / 10) * maxOffset * tiltSensitivity;
+            const offsetY = (y / 10) * maxOffset * tiltSensitivity;
             bubble.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
         }
 
@@ -747,14 +850,16 @@
         function calculateAccelerationChange(newX, newY, newZ) {
             accelerationHistory.push({ x: newX, y: newY, z: newZ, time: Date.now() });
             
-            // 最新の1秒間のデータのみ保持
-            const oneSecondAgo = Date.now() - 1000;
-            accelerationHistory = accelerationHistory.filter(data => data.time > oneSecondAgo);
+            // 最新の0.5秒間のデータのみ保持（より高感度に）
+            const halfSecondAgo = Date.now() - 500;
+            accelerationHistory = accelerationHistory.filter(data => data.time > halfSecondAgo);
             
             if (accelerationHistory.length < 2) return 0;
             
             // 変化量の合計を計算
             let totalChange = 0;
+            let maxChange = 0;
+            
             for (let i = 1; i < accelerationHistory.length; i++) {
                 const prev = accelerationHistory[i - 1];
                 const curr = accelerationHistory[i];
@@ -763,10 +868,14 @@
                 const deltaY = curr.y - prev.y;
                 const deltaZ = curr.z - prev.z;
                 
-                totalChange += Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+                const change = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+                totalChange += change;
+                maxChange = Math.max(maxChange, change);
             }
             
-            return totalChange;
+            // 平均変化量と最大変化量の組み合わせで、より敏感に反応
+            const avgChange = totalChange / (accelerationHistory.length - 1);
+            return (avgChange + maxChange) / 2;
         }
 
         // ダウジングロッドを更新
@@ -787,7 +896,8 @@
 
         // 探知レベルを更新
         function updateDetectionLevel(changeLevel) {
-            detectionLevel = Math.min(changeLevel * 10, 100);
+            // 感度を適用して探知レベルを計算（基本感度も上げる）
+            detectionLevel = Math.min(changeLevel * 25 * sensitivity, 100);
             
             const meterFill = document.getElementById('meterFill');
             const meterText = document.getElementById('meterText');
