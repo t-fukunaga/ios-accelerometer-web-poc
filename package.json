@@ -1,0 +1,13 @@
+{
+  "name": "ios-accelerometer-web-poc",
+  "version": "1.0.0",
+  "description": "iOS Safari加速度センサーPoC",
+  "type": "module",
+  "scripts": {
+    "dev": "npx live-server . --port=8080"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "live-server": "^1.2.2"
+  }
+}

@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+.pnpm-store/
+
+# SSL証明書（自己署名）
+*.pem
+*.key
+*.crt
+*.csr
+
+# ログファイル
+*.log
+npm-debug.log*
+pnpm-debug.log*
+pnpm-error.log*
+
+# エディタ設定
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS関連
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# 一時ファイル
+*.tmp
+.cache/

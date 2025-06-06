@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>デバイス傾きセンサー</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        /* デバッグ情報トグル */
+        .debug-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .debug-toggle:hover {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .debug-info {
+            display: none;
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .debug-info.active {
+            display: block;
+        }
+
+        /* 3Dデバイス表示 */
+        .device-visualizer {
+            margin: 30px auto;
+            width: 200px;
+            height: 200px;
+            perspective: 800px;
+        }
+
+        .device-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .device-face {
+            position: absolute;
+            width: 120px;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px solid rgba(255,255,255,0.8);
+            border-radius: 15px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: rgba(255,255,255,0.9);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        /* ステータス */
+        .status {
+            text-align: center;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .status.waiting {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        /* スタートボタン */
+        .start-button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* センサーデータ表示 */
+        .sensor-data {
+            display: none;
+        }
+
+        .sensor-data.active {
+            display: block;
+        }
+
+        /* 軸ごとのデータ表示 */
+        .axis-container {
+            margin-bottom: 20px;
+        }
+
+        .axis-item {
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .axis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .axis-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .axis-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+        }
+
+        .axis-x .axis-icon { background: #e74c3c; }
+        .axis-y .axis-icon { background: #2ecc71; }
+        .axis-z .axis-icon { background: #3498db; }
+
+        .axis-value {
+            font-size: 20px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* プログレスバー */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: currentColor;
+            transition: width 0.1s ease-out;
+            position: absolute;
+            left: 50%;
+            transform-origin: left center;
+        }
+
+        .axis-x .progress-bar { background: #e74c3c; }
+        .axis-y .progress-bar { background: #2ecc71; }
+        .axis-z .progress-bar { background: #3498db; }
+
+        /* 説明テキスト */
+        .axis-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* 傾き方向インジケーター */
+        .tilt-indicator {
+            margin: 20px auto;
+            width: 150px;
+            height: 150px;
+            position: relative;
+            background: #f0f0f0;
+            border-radius: 50%;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .tilt-bubble {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+            transition: all 0.1s ease-out;
+        }
+
+        .info {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="debugToggle" class="debug-toggle" title="デバッグ情報">
+            🔧
+        </button>
+
+        <h1>📱 デバイス傾きセンサー</h1>
+        <p class="subtitle">デバイスを傾けると反応します</p>
+        
+        <div id="debugInfo" class="debug-info">
+            デバッグ情報がここに表示されます...
+        </div>
+
+        <div id="status" class="status waiting">
+            開始ボタンをタップしてください
+        </div>
+
+        <button id="startButton" class="start-button">
+            センサーを開始
+        </button>
+
+        <div id="sensorData" class="sensor-data">
+            <!-- 3Dデバイス表示 -->
+            <div class="device-visualizer">
+                <div id="device3d" class="device-3d">
+                    <div class="device-face">📱</div>
+                </div>
+            </div>
+
+            <!-- 傾きインジケーター -->
+            <div class="tilt-indicator">
+                <div id="tiltBubble" class="tilt-bubble"></div>
+            </div>
+
+            <!-- 各軸のデータ -->
+            <div class="axis-container">
+                <div class="axis-item axis-x">
+                    <div class="axis-header">
+                        <div class="axis-label">
+                            <div class="axis-icon">X</div>
+                            <span>左右の傾き</span>
+                        </div>
+                        <div class="axis-value" id="xValue">0.00</div>
+                    </div>
+                    <div class="progress-container">
+                        <div id="xProgress" class="progress-bar"></div>
+                    </div>
+                    <div class="axis-description">左に傾ける ← → 右に傾ける</div>
+                </div>
+
+                <div class="axis-item axis-y">
+                    <div class="axis-header">
+                        <div class="axis-label">
+                            <div class="axis-icon">Y</div>
+                            <span>前後の傾き</span>
+                        </div>
+                        <div class="axis-value" id="yValue">0.00</div>
+                    </div>
+                    <div class="progress-container">
+                        <div id="yProgress" class="progress-bar"></div>
+                    </div>
+                    <div class="axis-description">手前に傾ける ← → 奥に傾ける</div>
+                </div>
+
+                <div class="axis-item axis-z">
+                    <div class="axis-header">
+                        <div class="axis-label">
+                            <div class="axis-icon">Z</div>
+                            <span>上下の動き</span>
+                        </div>
+                        <div class="axis-value" id="zValue">0.00</div>
+                    </div>
+                    <div class="progress-container">
+                        <div id="zProgress" class="progress-bar"></div>
+                    </div>
+                    <div class="axis-description">下向き ← → 上向き</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info">
+            💡 デバイスを様々な方向に傾けてみてください<br>
+            更新頻度: 100ms
+        </div>
+    </div>
+
+    <script>
+        // グローバル変数
+        let debugLog = [];
+        let isListening = false;
+        let debugVisible = false;
+
+        // デバッグ情報を画面に表示
+        function log(message) {
+            const now = new Date().toTimeString().split(' ')[0];
+            const logMessage = `[${now}] ${message}`;
+            debugLog.push(logMessage);
+            
+            // 最新の10件のみ保持
+            if (debugLog.length > 10) {
+                debugLog.shift();
+            }
+            
+            const debugDiv = document.getElementById('debugInfo');
+            debugDiv.textContent = debugLog.join('\n');
+            
+            // コンソールにも出力
+            console.log(logMessage);
+        }
+
+        // デバッグ表示切り替え
+        document.getElementById('debugToggle').addEventListener('click', function() {
+            debugVisible = !debugVisible;
+            const debugDiv = document.getElementById('debugInfo');
+            debugDiv.classList.toggle('active', debugVisible);
+            this.textContent = debugVisible ? '✖️' : '🔧';
+        });
+
+        // ステータス更新
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + type;
+            log(`ステータス: ${message} (${type})`);
+        }
+
+        // 環境情報を記録
+        function logEnvironment() {
+            log('=== 環境情報 ===');
+            log('UA: ' + navigator.userAgent.substring(0, 50) + '...');
+            log('Protocol: ' + window.location.protocol);
+            log('Host: ' + window.location.host);
+            log('DeviceMotionEvent: ' + ('DeviceMotionEvent' in window ? 'あり' : 'なし'));
+            
+            if (window.DeviceMotionEvent && window.DeviceMotionEvent.requestPermission) {
+                log('requestPermission: あり（iOS 13+）');
+            } else {
+                log('requestPermission: なし');
+            }
+        }
+
+        // プログレスバーを更新
+        function updateProgressBar(elementId, value, max = 10) {
+            const progress = document.getElementById(elementId);
+            const percentage = Math.min(Math.abs(value) / max * 50, 50);
+            
+            if (value >= 0) {
+                progress.style.width = percentage + '%';
+                progress.style.transform = 'translateX(0)';
+            } else {
+                progress.style.width = percentage + '%';
+                progress.style.transform = 'translateX(-100%)';
+            }
+        }
+
+        // 3Dデバイスを更新
+        function update3DDevice(x, y) {
+            const device = document.getElementById('device3d');
+            const rotateX = -y * 3; // Y軸の傾きをX軸回転に
+            const rotateY = x * 3;  // X軸の傾きをY軸回転に
+            device.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
+
+        // 傾きバブルを更新
+        function updateTiltBubble(x, y) {
+            const bubble = document.getElementById('tiltBubble');
+            const maxOffset = 55; // 最大移動距離
+            const offsetX = (x / 10) * maxOffset;
+            const offsetY = (y / 10) * maxOffset;
+            bubble.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+        }
+
+        // 加速度データを更新
+        function updateSensorData(x, y, z) {
+            // 数値を更新
+            document.getElementById('xValue').textContent = x.toFixed(2);
+            document.getElementById('yValue').textContent = y.toFixed(2);
+            document.getElementById('zValue').textContent = z.toFixed(2);
+            
+            // プログレスバーを更新
+            updateProgressBar('xProgress', x);
+            updateProgressBar('yProgress', y);
+            updateProgressBar('zProgress', z - 9.8); // 重力を補正
+            
+            // 3D表示を更新
+            update3DDevice(x, y);
+            
+            // 傾きバブルを更新
+            updateTiltBubble(x, y);
+        }
+
+        // センサー開始
+        async function startSensor() {
+            log('startSensor関数が呼ばれました');
+            
+            const button = document.getElementById('startButton');
+            button.disabled = true;
+            
+            try {
+                // iOS 13以降の権限チェック
+                if (window.DeviceMotionEvent && typeof window.DeviceMotionEvent.requestPermission === 'function') {
+                    log('iOS 13+の権限をリクエスト中...');
+                    updateStatus('センサーの権限を確認中...', 'waiting');
+                    
+                    const permission = await window.DeviceMotionEvent.requestPermission();
+                    log('権限の結果: ' + permission);
+                    
+                    if (permission !== 'granted') {
+                        throw new Error('権限が拒否されました');
+                    }
+                }
+                
+                // イベントリスナーを設定
+                if (!isListening) {
+                    log('devicemotionイベントリスナーを設定中...');
+                    
+                    let eventCount = 0;
+                    let lastUpdate = 0;
+                    
+                    window.addEventListener('devicemotion', function(event) {
+                        eventCount++;
+                        
+                        // 初回イベントをログ
+                        if (eventCount === 1) {
+                            log('最初のイベントを受信！');
+                            document.getElementById('sensorData').classList.add('active');
+                            updateStatus('センサー動作中 🎯', 'success');
+                        }
+                        
+                        // 100ms間隔で更新
+                        const now = Date.now();
+                        if (now - lastUpdate < 100) return;
+                        lastUpdate = now;
+                        
+                        // 加速度データを取得
+                        if (event.accelerationIncludingGravity) {
+                            const acc = event.accelerationIncludingGravity;
+                            updateSensorData(
+                                acc.x || 0,
+                                acc.y || 0,
+                                acc.z || 0
+                            );
+                        }
+                    });
+                    
+                    isListening = true;
+                    log('リスナー設定完了');
+                    
+                    // 3秒後にイベントが来ているかチェック
+                    setTimeout(function() {
+                        if (eventCount === 0) {
+                            log('警告: 3秒経ってもイベントが来ません');
+                            updateStatus('センサーが反応しません。デバイスを動かしてみてください', 'error');
+                        } else {
+                            log(`3秒間で${eventCount}個のイベントを受信`);
+                        }
+                    }, 3000);
+                }
+                
+                button.textContent = '✨ センサー動作中';
+                updateStatus('センサーを起動しました', 'success');
+                
+            } catch (error) {
+                log('エラー: ' + error.message);
+                updateStatus('エラー: ' + error.message, 'error');
+                button.disabled = false;
+            }
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            log('ページ読み込み完了');
+            logEnvironment();
+            
+            const button = document.getElementById('startButton');
+            
+            // DeviceMotionEventが使えるかチェック
+            if (!window.DeviceMotionEvent) {
+                log('エラー: DeviceMotionEventがサポートされていません');
+                updateStatus('このブラウザは加速度センサーに対応していません', 'error');
+                button.disabled = true;
+                return;
+            }
+            
+            // ボタンクリックイベント
+            button.addEventListener('click', function() {
+                log('ボタンがクリックされました');
+                startSensor();
+            });
+            
+            log('初期化完了');
+        });
+    </script>
+</body>
+</html>
