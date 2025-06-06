@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>デバイス傾きセンサー</title>
+    <title>加速度センサー デモ</title>
     <style>
         * {
             margin: 0;
@@ -83,38 +83,46 @@
             display: block;
         }
 
-        /* 3Dデバイス表示 */
-        .device-visualizer {
-            margin: 30px auto;
-            width: 200px;
-            height: 200px;
-            perspective: 800px;
-        }
-
-        .device-3d {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-        }
-
-        .device-face {
-            position: absolute;
-            width: 120px;
-            height: 180px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 2px solid rgba(255,255,255,0.8);
-            border-radius: 15px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+        /* タブシステム */
+        .tabs {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-            color: rgba(255,255,255,0.9);
-            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            margin-bottom: 25px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .tab.active {
+            background: white;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255,255,255,0.5);
+        }
+
+        /* タブコンテンツ */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* ステータス */
@@ -179,6 +187,42 @@
 
         .sensor-data.active {
             display: block;
+        }
+
+        /* === タブ1: 傾きセンサー === */
+        
+        /* 3Dデバイス表示 */
+        .device-visualizer {
+            margin: 30px auto;
+            width: 200px;
+            height: 200px;
+            perspective: 800px;
+        }
+
+        .device-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .device-face {
+            position: absolute;
+            width: 120px;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px solid rgba(255,255,255,0.8);
+            border-radius: 15px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: rgba(255,255,255,0.9);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
         }
 
         /* 軸ごとのデータ表示 */
@@ -285,6 +329,159 @@
             transition: all 0.1s ease-out;
         }
 
+        /* === タブ2: ダウジング === */
+        
+        .dowsing-container {
+            text-align: center;
+        }
+
+        .dowsing-rods {
+            margin: 40px auto;
+            width: 300px;
+            height: 200px;
+            position: relative;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rod {
+            position: absolute;
+            width: 4px;
+            height: 80px;
+            background: linear-gradient(180deg, #8B4513 0%, #D2691E 100%);
+            border-radius: 2px;
+            transform-origin: bottom center;
+            transition: transform 0.2s ease-out;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .rod.left {
+            left: 120px;
+            transform: rotate(-15deg);
+        }
+
+        .rod.right {
+            right: 120px;
+            transform: rotate(15deg);
+        }
+
+        .rod::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: #654321;
+            border-radius: 50%;
+        }
+
+        .detection-field {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px dashed rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .detection-field.active {
+            opacity: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.6;
+            }
+        }
+
+        .detection-meter {
+            margin: 30px auto;
+            width: 250px;
+        }
+
+        .meter-label {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .meter-container {
+            background: #f0f0f0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ecc71 0%, #f39c12 50%, #e74c3c 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .meter-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .detection-status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .detection-status.none {
+            background: #f8f9fa;
+            color: #666;
+        }
+
+        .detection-status.weak {
+            background: #e8f5e9;
+            color: #2ecc71;
+        }
+
+        .detection-status.strong {
+            background: #fff3cd;
+            color: #f39c12;
+        }
+
+        .detection-status.very-strong {
+            background: #ffebee;
+            color: #e74c3c;
+            animation: glow 1s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(231, 76, 60, 0.3); }
+            to { box-shadow: 0 0 20px rgba(231, 76, 60, 0.6); }
+        }
+
         .info {
             font-size: 13px;
             color: #666;
@@ -300,11 +497,17 @@
             🔧
         </button>
 
-        <h1>📱 デバイス傾きセンサー</h1>
-        <p class="subtitle">デバイスを傾けると反応します</p>
+        <h1>📱 加速度センサー デモ</h1>
+        <p class="subtitle">タブを切り替えて様々なデモを体験</p>
         
         <div id="debugInfo" class="debug-info">
             デバッグ情報がここに表示されます...
+        </div>
+
+        <!-- タブ -->
+        <div class="tabs">
+            <button class="tab active" data-tab="tilt">🔄 傾きセンサー</button>
+            <button class="tab" data-tab="dowsing">🪄 ダウジング</button>
         </div>
 
         <div id="status" class="status waiting">
@@ -315,67 +518,98 @@
             センサーを開始
         </button>
 
-        <div id="sensorData" class="sensor-data">
-            <!-- 3Dデバイス表示 -->
-            <div class="device-visualizer">
-                <div id="device3d" class="device-3d">
-                    <div class="device-face">📱</div>
+        <!-- タブ1: 傾きセンサー -->
+        <div id="tiltContent" class="tab-content active">
+            <div id="sensorData" class="sensor-data">
+                <!-- 3Dデバイス表示 -->
+                <div class="device-visualizer">
+                    <div id="device3d" class="device-3d">
+                        <div class="device-face">📱</div>
+                    </div>
+                </div>
+
+                <!-- 傾きインジケーター -->
+                <div class="tilt-indicator">
+                    <div id="tiltBubble" class="tilt-bubble"></div>
+                </div>
+
+                <!-- 各軸のデータ -->
+                <div class="axis-container">
+                    <div class="axis-item axis-x">
+                        <div class="axis-header">
+                            <div class="axis-label">
+                                <div class="axis-icon">X</div>
+                                <span>左右の傾き</span>
+                            </div>
+                            <div class="axis-value" id="xValue">0.00</div>
+                        </div>
+                        <div class="progress-container">
+                            <div id="xProgress" class="progress-bar"></div>
+                        </div>
+                        <div class="axis-description">左に傾ける ← → 右に傾ける</div>
+                    </div>
+
+                    <div class="axis-item axis-y">
+                        <div class="axis-header">
+                            <div class="axis-label">
+                                <div class="axis-icon">Y</div>
+                                <span>前後の傾き</span>
+                            </div>
+                            <div class="axis-value" id="yValue">0.00</div>
+                        </div>
+                        <div class="progress-container">
+                            <div id="yProgress" class="progress-bar"></div>
+                        </div>
+                        <div class="axis-description">手前に傾ける ← → 奥に傾ける</div>
+                    </div>
+
+                    <div class="axis-item axis-z">
+                        <div class="axis-header">
+                            <div class="axis-label">
+                                <div class="axis-icon">Z</div>
+                                <span>上下の動き</span>
+                            </div>
+                            <div class="axis-value" id="zValue">0.00</div>
+                        </div>
+                        <div class="progress-container">
+                            <div id="zProgress" class="progress-bar"></div>
+                        </div>
+                        <div class="axis-description">下向き ← → 上向き</div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- 傾きインジケーター -->
-            <div class="tilt-indicator">
-                <div id="tiltBubble" class="tilt-bubble"></div>
-            </div>
-
-            <!-- 各軸のデータ -->
-            <div class="axis-container">
-                <div class="axis-item axis-x">
-                    <div class="axis-header">
-                        <div class="axis-label">
-                            <div class="axis-icon">X</div>
-                            <span>左右の傾き</span>
-                        </div>
-                        <div class="axis-value" id="xValue">0.00</div>
-                    </div>
-                    <div class="progress-container">
-                        <div id="xProgress" class="progress-bar"></div>
-                    </div>
-                    <div class="axis-description">左に傾ける ← → 右に傾ける</div>
+        <!-- タブ2: ダウジング -->
+        <div id="dowsingContent" class="tab-content">
+            <div id="dowsingData" class="sensor-data dowsing-container">
+                <div class="dowsing-rods">
+                    <div id="leftRod" class="rod left"></div>
+                    <div id="rightRod" class="rod right"></div>
+                    <div id="detectionField" class="detection-field"></div>
                 </div>
 
-                <div class="axis-item axis-y">
-                    <div class="axis-header">
-                        <div class="axis-label">
-                            <div class="axis-icon">Y</div>
-                            <span>前後の傾き</span>
-                        </div>
-                        <div class="axis-value" id="yValue">0.00</div>
+                <div class="detection-meter">
+                    <div class="meter-label">探知レベル</div>
+                    <div class="meter-container">
+                        <div id="meterFill" class="meter-fill"></div>
+                        <div id="meterText" class="meter-text">0%</div>
                     </div>
-                    <div class="progress-container">
-                        <div id="yProgress" class="progress-bar"></div>
-                    </div>
-                    <div class="axis-description">手前に傾ける ← → 奥に傾ける</div>
                 </div>
 
-                <div class="axis-item axis-z">
-                    <div class="axis-header">
-                        <div class="axis-label">
-                            <div class="axis-icon">Z</div>
-                            <span>上下の動き</span>
-                        </div>
-                        <div class="axis-value" id="zValue">0.00</div>
-                    </div>
-                    <div class="progress-container">
-                        <div id="zProgress" class="progress-bar"></div>
-                    </div>
-                    <div class="axis-description">下向き ← → 上向き</div>
+                <div id="detectionStatus" class="detection-status none">
+                    何も検出されていません
+                </div>
+
+                <div class="info">
+                    💡 デバイスを様々な方向に動かして探知してみてください<br>
+                    動きが大きいほど反応が強くなります
                 </div>
             </div>
         </div>
 
         <div class="info">
-            💡 デバイスを様々な方向に傾けてみてください<br>
+            💡 デバイスを様々な方向に動かしてみてください<br>
             更新頻度: 100ms
         </div>
     </div>
@@ -385,6 +619,11 @@
         let debugLog = [];
         let isListening = false;
         let debugVisible = false;
+        let currentTab = 'tilt';
+
+        // 加速度データの履歴（ダウジング用）
+        let accelerationHistory = [];
+        let detectionLevel = 0;
 
         // デバッグ情報を画面に表示
         function log(message) {
@@ -412,6 +651,34 @@
             this.textContent = debugVisible ? '✖️' : '🔧';
         });
 
+        // タブ切り替え
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // タブボタンの状態更新
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.tab === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // コンテンツの表示切り替え
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Content').classList.add('active');
+            
+            log(`タブを${tabName}に切り替えました`);
+        }
+
+        // タブクリックイベント
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                switchTab(tab.dataset.tab);
+            });
+        });
+
         // ステータス更新
         function updateStatus(message, type) {
             const statusDiv = document.getElementById('status');
@@ -435,9 +702,13 @@
             }
         }
 
+        // === 傾きセンサー関連 ===
+
         // プログレスバーを更新
         function updateProgressBar(elementId, value, max = 10) {
             const progress = document.getElementById(elementId);
+            if (!progress) return;
+            
             const percentage = Math.min(Math.abs(value) / max * 50, 50);
             
             if (value >= 0) {
@@ -452,6 +723,8 @@
         // 3Dデバイスを更新
         function update3DDevice(x, y) {
             const device = document.getElementById('device3d');
+            if (!device) return;
+            
             const rotateX = -y * 3; // Y軸の傾きをX軸回転に
             const rotateY = x * 3;  // X軸の傾きをY軸回転に
             device.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
@@ -460,29 +733,127 @@
         // 傾きバブルを更新
         function updateTiltBubble(x, y) {
             const bubble = document.getElementById('tiltBubble');
+            if (!bubble) return;
+            
             const maxOffset = 55; // 最大移動距離
             const offsetX = (x / 10) * maxOffset;
             const offsetY = (y / 10) * maxOffset;
             bubble.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
         }
 
+        // === ダウジング関連 ===
+
+        // 加速度の変化量を計算
+        function calculateAccelerationChange(newX, newY, newZ) {
+            accelerationHistory.push({ x: newX, y: newY, z: newZ, time: Date.now() });
+            
+            // 最新の1秒間のデータのみ保持
+            const oneSecondAgo = Date.now() - 1000;
+            accelerationHistory = accelerationHistory.filter(data => data.time > oneSecondAgo);
+            
+            if (accelerationHistory.length < 2) return 0;
+            
+            // 変化量の合計を計算
+            let totalChange = 0;
+            for (let i = 1; i < accelerationHistory.length; i++) {
+                const prev = accelerationHistory[i - 1];
+                const curr = accelerationHistory[i];
+                
+                const deltaX = curr.x - prev.x;
+                const deltaY = curr.y - prev.y;
+                const deltaZ = curr.z - prev.z;
+                
+                totalChange += Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+            }
+            
+            return totalChange;
+        }
+
+        // ダウジングロッドを更新
+        function updateDowsingRods(changeLevel) {
+            const leftRod = document.getElementById('leftRod');
+            const rightRod = document.getElementById('rightRod');
+            
+            if (!leftRod || !rightRod) return;
+            
+            // 変化レベルに応じてロッドの角度を調整
+            const baseAngle = 15;
+            const maxAdditionalAngle = 30;
+            const additionalAngle = (changeLevel / 10) * maxAdditionalAngle;
+            
+            leftRod.style.transform = `rotate(${-(baseAngle + additionalAngle)}deg)`;
+            rightRod.style.transform = `rotate(${baseAngle + additionalAngle}deg)`;
+        }
+
+        // 探知レベルを更新
+        function updateDetectionLevel(changeLevel) {
+            detectionLevel = Math.min(changeLevel * 10, 100);
+            
+            const meterFill = document.getElementById('meterFill');
+            const meterText = document.getElementById('meterText');
+            const statusDiv = document.getElementById('detectionStatus');
+            const field = document.getElementById('detectionField');
+            
+            if (!meterFill || !meterText || !statusDiv || !field) return;
+            
+            // メーターの更新
+            meterFill.style.width = detectionLevel + '%';
+            meterText.textContent = Math.round(detectionLevel) + '%';
+            
+            // ステータスの更新
+            let status, statusClass;
+            if (detectionLevel < 10) {
+                status = '何も検出されていません';
+                statusClass = 'none';
+                field.classList.remove('active');
+            } else if (detectionLevel < 30) {
+                status = '弱い反応を検出';
+                statusClass = 'weak';
+                field.classList.add('active');
+            } else if (detectionLevel < 70) {
+                status = '強い反応を検出！';
+                statusClass = 'strong';
+                field.classList.add('active');
+            } else {
+                status = '非常に強い反応！何かあります！';
+                statusClass = 'very-strong';
+                field.classList.add('active');
+            }
+            
+            statusDiv.textContent = status;
+            statusDiv.className = 'detection-status ' + statusClass;
+        }
+
         // 加速度データを更新
         function updateSensorData(x, y, z) {
-            // 数値を更新
-            document.getElementById('xValue').textContent = x.toFixed(2);
-            document.getElementById('yValue').textContent = y.toFixed(2);
-            document.getElementById('zValue').textContent = z.toFixed(2);
-            
-            // プログレスバーを更新
-            updateProgressBar('xProgress', x);
-            updateProgressBar('yProgress', y);
-            updateProgressBar('zProgress', z - 9.8); // 重力を補正
-            
-            // 3D表示を更新
-            update3DDevice(x, y);
-            
-            // 傾きバブルを更新
-            updateTiltBubble(x, y);
+            if (currentTab === 'tilt') {
+                // 傾きセンサータブ
+                // 数値を更新
+                const xEl = document.getElementById('xValue');
+                const yEl = document.getElementById('yValue');
+                const zEl = document.getElementById('zValue');
+                
+                if (xEl) xEl.textContent = x.toFixed(2);
+                if (yEl) yEl.textContent = y.toFixed(2);
+                if (zEl) zEl.textContent = z.toFixed(2);
+                
+                // プログレスバーを更新
+                updateProgressBar('xProgress', x);
+                updateProgressBar('yProgress', y);
+                updateProgressBar('zProgress', z - 9.8); // 重力を補正
+                
+                // 3D表示を更新
+                update3DDevice(x, y);
+                
+                // 傾きバブルを更新
+                updateTiltBubble(x, y);
+                
+            } else if (currentTab === 'dowsing') {
+                // ダウジングタブ
+                const changeLevel = calculateAccelerationChange(x, y, z);
+                updateDowsingRods(changeLevel);
+                updateDetectionLevel(changeLevel);
+            }
         }
 
         // センサー開始
@@ -520,6 +891,9 @@
                         if (eventCount === 1) {
                             log('最初のイベントを受信！');
                             document.getElementById('sensorData').classList.add('active');
+                            if (currentTab === 'dowsing') {
+                                document.getElementById('dowsingData').classList.add('active');
+                            }
                             updateStatus('センサー動作中 🎯', 'success');
                         }
                         
