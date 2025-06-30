@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -25,7 +26,7 @@
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
@@ -48,7 +49,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
             border: none;
             border-radius: 50%;
             width: 40px;
@@ -62,7 +63,7 @@
         }
 
         .debug-toggle:hover {
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .debug-info {
@@ -109,11 +110,11 @@
         .tab.active {
             background: white;
             color: #333;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .tab:hover:not(.active) {
-            background: rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.5);
         }
 
         /* タブコンテンツ */
@@ -190,7 +191,7 @@
         }
 
         /* === タブ1: 傾きセンサー === */
-        
+
         /* 3Dデバイス表示 */
         .device-visualizer {
             margin: 30px auto;
@@ -212,7 +213,7 @@
             width: 120px;
             height: 180px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 2px solid rgba(255,255,255,0.8);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             border-radius: 15px;
             left: 50%;
             top: 50%;
@@ -221,7 +222,7 @@
             align-items: center;
             justify-content: center;
             font-size: 60px;
-            color: rgba(255,255,255,0.9);
+            color: rgba(255, 255, 255, 0.9);
             box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
         }
 
@@ -235,7 +236,7 @@
             background: #f8f9fa;
             padding: 15px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .axis-header {
@@ -265,9 +266,17 @@
             font-size: 16px;
         }
 
-        .axis-x .axis-icon { background: #e74c3c; }
-        .axis-y .axis-icon { background: #2ecc71; }
-        .axis-z .axis-icon { background: #3498db; }
+        .axis-x .axis-icon {
+            background: #e74c3c;
+        }
+
+        .axis-y .axis-icon {
+            background: #2ecc71;
+        }
+
+        .axis-z .axis-icon {
+            background: #3498db;
+        }
 
         .axis-value {
             font-size: 20px;
@@ -294,9 +303,17 @@
             transform-origin: left center;
         }
 
-        .axis-x .progress-bar { background: #e74c3c; }
-        .axis-y .progress-bar { background: #2ecc71; }
-        .axis-z .progress-bar { background: #3498db; }
+        .axis-x .progress-bar {
+            background: #e74c3c;
+        }
+
+        .axis-y .progress-bar {
+            background: #2ecc71;
+        }
+
+        .axis-z .progress-bar {
+            background: #3498db;
+        }
 
         /* 説明テキスト */
         .axis-description {
@@ -313,7 +330,7 @@
             position: relative;
             background: #f0f0f0;
             border-radius: 50%;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
         .tilt-bubble {
@@ -330,7 +347,7 @@
         }
 
         /* === タブ2: ダウジング === */
-        
+
         .dowsing-container {
             text-align: center;
         }
@@ -360,11 +377,11 @@
             height: 100%;
             border: 4px solid #667eea;
             border-radius: 50%;
-            background: radial-gradient(circle at center, 
-                rgba(255, 255, 255, 0.95) 0%, 
-                rgba(240, 243, 255, 0.9) 40%,
-                rgba(230, 235, 255, 0.85) 100%);
-            box-shadow: 
+            background: radial-gradient(circle at center,
+                    rgba(255, 255, 255, 0.95) 0%,
+                    rgba(240, 243, 255, 0.9) 40%,
+                    rgba(230, 235, 255, 0.85) 100%);
+            box-shadow:
                 0 10px 30px rgba(102, 126, 234, 0.2),
                 inset 0 2px 10px rgba(102, 126, 234, 0.1);
         }
@@ -382,9 +399,9 @@
             font-weight: 600;
             font-size: 20px;
             color: #4a5568;
-            text-shadow: 
-                0 1px 3px rgba(255,255,255,0.9),
-                0 -1px 3px rgba(255,255,255,0.9);
+            text-shadow:
+                0 1px 3px rgba(255, 255, 255, 0.9),
+                0 -1px 3px rgba(255, 255, 255, 0.9);
         }
 
         .chart-segment:nth-child(1) {
@@ -440,7 +457,7 @@
             top: 0;
             transform: translateX(-50%);
             z-index: 2;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .pendulum-chain {
@@ -452,7 +469,6 @@
             transform: translateX(-50%);
             transform-origin: top center;
             transform-style: preserve-3d;
-            transition: transform 0.15s ease-out;
         }
 
         .pendulum-chain::before {
@@ -460,30 +476,30 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, 
-                rgba(200,200,200,0.8) 0%, 
-                rgba(150,150,150,0.9) 50%,
-                rgba(100,100,100,1) 100%);
-            box-shadow: 0 0 2px rgba(0,0,0,0.2);
+            background: linear-gradient(180deg,
+                    rgba(200, 200, 200, 0.8) 0%,
+                    rgba(150, 150, 150, 0.9) 50%,
+                    rgba(100, 100, 100, 1) 100%);
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
         }
 
         .pendulum-weight {
             position: absolute;
             width: 40px;
             height: 50px;
-            background: linear-gradient(145deg, 
-                #9b59b6 0%, 
-                #8e44ad 30%, 
-                #6c3483 60%,
-                #5b2c6f 100%);
+            background: linear-gradient(145deg,
+                    #9b59b6 0%,
+                    #8e44ad 30%,
+                    #6c3483 60%,
+                    #5b2c6f 100%);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             left: 50%;
             bottom: 0;
             transform: translateX(-50%);
-            box-shadow: 
+            box-shadow:
                 0 8px 20px rgba(107, 52, 131, 0.4),
-                inset 0 -3px 8px rgba(0,0,0,0.2),
-                inset 0 2px 6px rgba(255,255,255,0.3);
+                inset 0 -3px 8px rgba(0, 0, 0, 0.2),
+                inset 0 2px 6px rgba(255, 255, 255, 0.3);
         }
 
         .pendulum-weight::before {
@@ -491,10 +507,10 @@
             position: absolute;
             width: 15px;
             height: 15px;
-            background: radial-gradient(circle at 30% 30%, 
-                rgba(255,255,255,0.8) 0%, 
-                rgba(255,255,255,0.4) 40%,
-                transparent 70%);
+            background: radial-gradient(circle at 30% 30%,
+                    rgba(255, 255, 255, 0.8) 0%,
+                    rgba(255, 255, 255, 0.4) 40%,
+                    transparent 70%);
             border-radius: 50%;
             top: 8px;
             left: 8px;
@@ -505,10 +521,10 @@
             position: absolute;
             width: 12px;
             height: 12px;
-            background: radial-gradient(circle, 
-                rgba(255,255,255,0) 0%,
-                rgba(255,255,255,0.2) 50%,
-                rgba(255,255,255,0) 100%);
+            background: radial-gradient(circle,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    rgba(255, 255, 255, 0) 100%);
             border-radius: 50%;
             bottom: 5px;
             right: 5px;
@@ -516,31 +532,40 @@
         }
 
         @keyframes sparkle {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
 
         .pendulum-shadow {
             position: absolute;
             width: 60px;
             height: 30px;
-            background: radial-gradient(ellipse at center, 
-                rgba(0,0,0,0.4) 0%, 
-                rgba(0,0,0,0.2) 40%,
-                transparent 70%);
+            background: radial-gradient(ellipse at center,
+                    rgba(0, 0, 0, 0.4) 0%,
+                    rgba(0, 0, 0, 0.2) 40%,
+                    transparent 70%);
             top: 330px;
             left: 50%;
             transform: translateX(-50%) rotateX(90deg);
-            transition: all 0.15s ease-out;
             filter: blur(2px);
         }
 
         @keyframes pulse {
-            0%, 100% { 
+
+            0%,
+            100% {
                 transform: translate(-50%, -50%) scale(1);
                 opacity: 0.3;
             }
-            50% { 
+
+            50% {
                 transform: translate(-50%, -50%) scale(1.1);
                 opacity: 0.6;
             }
@@ -548,16 +573,23 @@
 
         /* チャートのハイライト表示 */
         .chart-segment.highlight {
-            background: radial-gradient(circle at center, 
-                rgba(102, 126, 234, 0.3) 0%, 
-                rgba(102, 126, 234, 0.1) 50%,
-                transparent 70%);
+            background: radial-gradient(circle at center,
+                    rgba(102, 126, 234, 0.3) 0%,
+                    rgba(102, 126, 234, 0.1) 50%,
+                    transparent 70%);
             animation: segmentPulse 1s infinite;
         }
 
         @keyframes segmentPulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
 
         .detection-meter {
@@ -629,8 +661,13 @@
         }
 
         @keyframes glow {
-            from { box-shadow: 0 0 10px rgba(231, 76, 60, 0.3); }
-            to { box-shadow: 0 0 20px rgba(231, 76, 60, 0.6); }
+            from {
+                box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+            }
+
+            to {
+                box-shadow: 0 0 20px rgba(231, 76, 60, 0.6);
+            }
         }
 
         .info {
@@ -647,7 +684,7 @@
             padding: 15px;
             background: #f8f9fa;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .sensitivity-label {
@@ -720,6 +757,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <button id="debugToggle" class="debug-toggle" title="デバッグ情報">
@@ -728,12 +766,11 @@
 
         <h1>📱 加速度センサー デモ</h1>
         <p class="subtitle">タブを切り替えて様々なデモを体験</p>
-        
+
         <div id="debugInfo" class="debug-info">
             デバッグ情報がここに表示されます...
         </div>
 
-        <!-- タブ -->
         <div class="tabs">
             <button class="tab active" data-tab="tilt">🔄 傾きセンサー</button>
             <button class="tab" data-tab="dowsing">🪄 ダウジング</button>
@@ -747,35 +784,30 @@
             センサーを開始
         </button>
 
-        <!-- 感度調整 -->
         <div class="sensitivity-control">
             <div class="sensitivity-label">
                 <span>🎚️ 感度調整</span>
                 <span class="sensitivity-value" id="sensitivityValue">x2.0</span>
             </div>
-            <input type="range" class="sensitivity-slider" id="sensitivitySlider" 
-                   min="0.5" max="25" step="0.1" value="2">
+            <input type="range" class="sensitivity-slider" id="sensitivitySlider" min="0.5" max="25" step="0.1"
+                value="2">
             <div class="sensitivity-description">
                 低感度 ← → 高感度
             </div>
         </div>
 
-        <!-- タブ1: 傾きセンサー -->
         <div id="tiltContent" class="tab-content active">
             <div id="sensorData" class="sensor-data">
-                <!-- 3Dデバイス表示 -->
                 <div class="device-visualizer">
                     <div id="device3d" class="device-3d">
                         <div class="device-face">📱</div>
                     </div>
                 </div>
 
-                <!-- 傾きインジケーター -->
                 <div class="tilt-indicator">
                     <div id="tiltBubble" class="tilt-bubble"></div>
                 </div>
 
-                <!-- 各軸のデータ -->
                 <div class="axis-container">
                     <div class="axis-item axis-x">
                         <div class="axis-header">
@@ -822,7 +854,6 @@
             </div>
         </div>
 
-        <!-- タブ2: ダウジング -->
         <div id="dowsingContent" class="tab-content">
             <div id="dowsingData" class="sensor-data dowsing-container">
                 <div class="pendulum-container">
@@ -879,41 +910,60 @@
         // 加速度データの履歴（ダウジング用）
         let accelerationHistory = [];
         let detectionLevel = 0;
-        
+
         // 感度設定
         let sensitivity = 2.0;
         let tiltSensitivity = 1.0;
+
+        // ペンデュラムの物理状態
+        let pendulumAngleX = 0;   // X軸周りの角度 (deg)
+        let pendulumAngleY = 0;   // Y軸周りの角度 (deg)
+        let pendulumAngleZ = 0;   // Z軸周りの角度（捻り）(deg)
+        let pendulumVelocityX = 0;  // X軸周りの角速度
+        let pendulumVelocityY = 0;  // Y軸周りの角速度
+        let pendulumVelocityZ = 0;  // Z軸周りの角速度
+        let pendulumForceX = 0;     // X軸方向の外力
+        let pendulumForceY = 0;     // Y軸方向の外力
+        let pendulumForceZ = 0;     // Z軸方向の外力
+
+        // 加速度から重力を分離するための変数
+        let gravity = { x: 0, y: 0, z: 0 };
+        const LPF_ALPHA = 0.8; // ローパスフィルタの係数（大きいほど滑らか）
+
+        // 減衰振動モデル (F = -kx - cv) に基づく定数
+        const SPRING_CONSTANT = 0.02; // 復元力係数 (k) - 振り子を中央に戻す力
+        const BASE_DAMPING = 0.98;   // 基本減衰係数 (c) - 動きを止める力（空気抵抗など）
+        const BASE_MAX_ANGLE = 60;    // 基本最大振れ角 (deg)
+
+        // 静止状態の検出と中心への引力に関する定数
+        let stillnessCounter = 0;
+        const STILLNESS_THRESHOLD = 15; // このフレーム数以上、動きが少なければ静止とみなす
+        const MOVEMENT_THRESHOLD = 0.05; // この角速度以下を「動きが少ない」とみなす
+        const CENTER_PULL_FORCE = 0.005; // 中心に引き寄せる力の係数
 
         // デバッグ情報を画面に表示
         function log(message) {
             const now = new Date().toTimeString().split(' ')[0];
             const logMessage = `[${now}] ${message}`;
             debugLog.push(logMessage);
-            
-            // 最新の10件のみ保持
             if (debugLog.length > 10) {
                 debugLog.shift();
             }
-            
-            const debugDiv = document.getElementById('debugInfo');
-            debugDiv.textContent = debugLog.join('\n');
-            
-            // コンソールにも出力
+            document.getElementById('debugInfo').textContent = debugLog.join('\n');
             console.log(logMessage);
         }
 
         // デバッグ表示切り替え
-        document.getElementById('debugToggle').addEventListener('click', function() {
+        document.getElementById('debugToggle').addEventListener('click', function () {
             debugVisible = !debugVisible;
-            const debugDiv = document.getElementById('debugInfo');
-            debugDiv.classList.toggle('active', debugVisible);
+            document.getElementById('debugInfo').classList.toggle('active', debugVisible);
             this.textContent = debugVisible ? '✖️' : '🔧';
         });
 
         // 感度スライダーのイベント
-        document.getElementById('sensitivitySlider').addEventListener('input', function(e) {
+        document.getElementById('sensitivitySlider').addEventListener('input', function (e) {
             sensitivity = parseFloat(e.target.value);
-            tiltSensitivity = sensitivity / 2; // 傾きセンサーは控えめに
+            tiltSensitivity = sensitivity / 2;
             document.getElementById('sensitivityValue').textContent = 'x' + sensitivity.toFixed(1);
             log(`感度を${sensitivity.toFixed(1)}倍に変更`);
         });
@@ -921,30 +971,13 @@
         // タブ切り替え
         function switchTab(tabName) {
             currentTab = tabName;
-            
-            // タブボタンの状態更新
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.dataset.tab === tabName) {
-                    tab.classList.add('active');
-                }
-            });
-            
-            // コンテンツの表示切り替え
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab.dataset.tab === tabName));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             document.getElementById(tabName + 'Content').classList.add('active');
-            
             log(`タブを${tabName}に切り替えました`);
         }
 
-        // タブクリックイベント
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                switchTab(tab.dataset.tab);
-            });
-        });
+        document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
 
         // ステータス更新
         function updateStatus(message, type) {
@@ -958,212 +991,230 @@
         function logEnvironment() {
             log('=== 環境情報 ===');
             log('UA: ' + navigator.userAgent.substring(0, 50) + '...');
-            log('Protocol: ' + window.location.protocol);
-            log('Host: ' + window.location.host);
             log('DeviceMotionEvent: ' + ('DeviceMotionEvent' in window ? 'あり' : 'なし'));
-            
             if (window.DeviceMotionEvent && window.DeviceMotionEvent.requestPermission) {
                 log('requestPermission: あり（iOS 13+）');
-            } else {
-                log('requestPermission: なし');
             }
         }
 
         // === 傾きセンサー関連 ===
-
-        // プログレスバーを更新
         function updateProgressBar(elementId, value, max = 10) {
             const progress = document.getElementById(elementId);
             if (!progress) return;
-            
             const percentage = Math.min(Math.abs(value) / max * 50, 50);
-            
-            if (value >= 0) {
-                progress.style.width = percentage + '%';
-                progress.style.transform = 'translateX(0)';
-            } else {
-                progress.style.width = percentage + '%';
-                progress.style.transform = 'translateX(-100%)';
-            }
+            progress.style.width = percentage + '%';
+            progress.style.transform = value >= 0 ? 'translateX(0)' : 'translateX(-100%)';
         }
 
-        // 3Dデバイスを更新
         function update3DDevice(x, y) {
             const device = document.getElementById('device3d');
             if (!device) return;
-            
-            const rotateX = -y * 3 * tiltSensitivity; // Y軸の傾きをX軸回転に
-            const rotateY = x * 3 * tiltSensitivity;  // X軸の傾きをY軸回転に
+            const rotateX = -y * 3 * tiltSensitivity;
+            const rotateY = x * 3 * tiltSensitivity;
             device.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         }
 
-        // 傾きバブルを更新
         function updateTiltBubble(x, y) {
             const bubble = document.getElementById('tiltBubble');
             if (!bubble) return;
-            
-            const maxOffset = 55; // 最大移動距離
+            const maxOffset = 55;
             const offsetX = (x / 10) * maxOffset * tiltSensitivity;
             const offsetY = (y / 10) * maxOffset * tiltSensitivity;
             bubble.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
         }
 
         // === ダウジング関連 ===
-
-        // 加速度の変化量を計算
         function calculateAccelerationChange(newX, newY, newZ) {
             accelerationHistory.push({ x: newX, y: newY, z: newZ, time: Date.now() });
-            
-            // 最新の0.5秒間のデータのみ保持（より高感度に）
-            const halfSecondAgo = Date.now() - 500;
-            accelerationHistory = accelerationHistory.filter(data => data.time > halfSecondAgo);
-            
+            const timeLimit = Date.now() - 500;
+            accelerationHistory = accelerationHistory.filter(data => data.time > timeLimit);
             if (accelerationHistory.length < 2) return 0;
-            
-            // 変化量の合計を計算
+
             let totalChange = 0;
-            let maxChange = 0;
-            
             for (let i = 1; i < accelerationHistory.length; i++) {
                 const prev = accelerationHistory[i - 1];
                 const curr = accelerationHistory[i];
-                
                 const deltaX = curr.x - prev.x;
                 const deltaY = curr.y - prev.y;
                 const deltaZ = curr.z - prev.z;
-                
-                const change = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-                totalChange += change;
-                maxChange = Math.max(maxChange, change);
+                totalChange += Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
             }
-            
-            // 平均変化量と最大変化量の組み合わせで、より敏感に反応
-            const avgChange = totalChange / (accelerationHistory.length - 1);
-            return (avgChange + maxChange) / 2;
+            return totalChange / (accelerationHistory.length - 1);
         }
 
-        // ペンデュラムを更新
-        function updatePendulum(x, y, changeLevel) {
+        /**
+         * 物理シミュレーションを更新 (60fpsで呼び出される)
+         * 静止状態を検出し、中心への収束を促すロジックを含む
+         */
+        function updatePendulumPhysics() {
+            const dt = 1.0; // 時間ステップは1として、係数側で調整
+
+            // 感度に応じてパラメータを調整
+            const DAMPING = BASE_DAMPING - (sensitivity - 2) * 0.001; // 感度が高いほど減衰が弱い
+            const MAX_ANGLE = BASE_MAX_ANGLE + (sensitivity - 2) * 1.5; // 感度が高いほど大きく揺れる
+
+            // 現在の角速度の絶対値の合計で動きの有無を判定
+            const currentSpeed = Math.abs(pendulumVelocityX) + Math.abs(pendulumVelocityY);
+
+            if (currentSpeed < MOVEMENT_THRESHOLD) {
+                stillnessCounter++;
+                // 一定時間、動きが少ない状態が続いたら、中心に引き寄せる
+                if (stillnessCounter > STILLNESS_THRESHOLD) {
+                    pendulumForceX -= pendulumAngleX * CENTER_PULL_FORCE;
+                    pendulumForceY -= pendulumAngleY * CENTER_PULL_FORCE;
+                    pendulumForceZ -= pendulumAngleZ * CENTER_PULL_FORCE * 0.5; // 捻りは弱め
+                }
+            } else {
+                stillnessCounter = 0; // 動きがあれば静止カウンターをリセット
+            }
+
+            // 感度に応じて復元力を調整（高感度ほど弱く）
+            const adjustedSpringConstant = SPRING_CONSTANT / (1 + (sensitivity - 2) * 0.05);
+
+            // --- X軸方向の運動 (F = -kx - cv) ---
+            const restoringForceX = -adjustedSpringConstant * pendulumAngleX;
+            const totalForceX = pendulumForceX + restoringForceX;
+            pendulumVelocityX = (pendulumVelocityX + totalForceX * dt) * DAMPING;
+            pendulumAngleX += pendulumVelocityX * dt;
+
+            // --- Y軸方向の運動 ---
+            const restoringForceY = -adjustedSpringConstant * pendulumAngleY;
+            const totalForceY = pendulumForceY + restoringForceY;
+            pendulumVelocityY = (pendulumVelocityY + totalForceY * dt) * DAMPING;
+            pendulumAngleY += pendulumVelocityY * dt;
+
+            // --- Z軸(捻り)方向の運動 ---
+            const restoringForceZ = -adjustedSpringConstant * 0.5 * pendulumAngleZ;
+            const totalForceZ = pendulumForceZ + restoringForceZ;
+            pendulumVelocityZ = (pendulumVelocityZ + totalForceZ * dt) * DAMPING;
+            pendulumAngleZ += pendulumVelocityZ * dt;
+
+            // 角度を制限
+            const totalAngle = Math.sqrt(pendulumAngleX * pendulumAngleX + pendulumAngleY * pendulumAngleY);
+            if (totalAngle > MAX_ANGLE) {
+                const scale = MAX_ANGLE / totalAngle;
+                pendulumAngleX *= scale;
+                pendulumAngleY *= scale;
+            }
+
+            // 外力を徐々に減衰させる
+            pendulumForceX *= 0.9;
+            pendulumForceY *= 0.9;
+            pendulumForceZ *= 0.9;
+
+            // 表示を更新
+            updatePendulumDisplay();
+        }
+
+        /**
+         * 物理計算の結果をDOMに反映させる
+         */
+        function updatePendulumDisplay() {
             const pendulumChain = document.getElementById('pendulumChain');
             const pendulumShadow = document.getElementById('pendulumShadow');
-            
             if (!pendulumChain || !pendulumShadow) return;
-            
-            // 加速度データに基づいて振り子の動きを計算
-            const maxSwing = 30; // 最大振れ角度
-            const swingX = (x / 10) * maxSwing * sensitivity;
-            const swingY = (y / 10) * maxSwing * sensitivity;
-            
-            // 変化量に応じて振り子の動きを増幅
-            const amplification = 1 + (changeLevel / 5);
-            const finalSwingX = swingX * amplification;
-            const finalSwingY = swingY * amplification;
-            
-            // 振り子の回転を適用（チェーンの根元を支点として）
-            pendulumChain.style.transform = `rotateX(${finalSwingY}deg) rotateZ(${finalSwingX}deg)`;
-            
-            // 影の位置を更新（振り子の動きに合わせて）
+
+            // 2軸の回転を適用
+            pendulumChain.style.transform = `rotateX(${pendulumAngleY}deg) rotateY(${-pendulumAngleX}deg) rotateZ(${pendulumAngleZ}deg)`;
+
+            // 影の位置を計算
             const chainLength = 180;
-            const shadowOffsetX = Math.sin(finalSwingX * Math.PI / 180) * chainLength;
-            const shadowOffsetY = Math.sin(finalSwingY * Math.PI / 180) * chainLength * 0.5; // 斜めビューのため調整
-            const shadowScale = 1 - (Math.sqrt(finalSwingX * finalSwingX + finalSwingY * finalSwingY) / 90);
-            
+            const shadowOffsetX = chainLength * Math.sin(-pendulumAngleX * Math.PI / 180);
+            const shadowOffsetY = chainLength * Math.sin(pendulumAngleY * Math.PI / 180) * 0.5;
+
+            // 影のスケールと不透明度を調整
+            const shadowDist = Math.sqrt(shadowOffsetX * shadowOffsetX + shadowOffsetY * shadowOffsetY);
+            const maxShadowDist = 80;
+            const shadowScale = Math.max(0.4, 1 - shadowDist / (maxShadowDist * 2));
+            const shadowOpacity = Math.max(0.1, 0.5 - shadowDist / maxShadowDist);
+
             pendulumShadow.style.transform = `translateX(calc(-50% + ${shadowOffsetX}px)) translateY(${shadowOffsetY}px) rotateX(90deg) scale(${shadowScale})`;
-            
-            // チャートセグメントのハイライト
-            updateChartHighlight(finalSwingX, finalSwingY);
+            pendulumShadow.style.opacity = shadowOpacity;
+
+            // チャートハイライト
+            updateChartHighlight(pendulumAngleX, pendulumAngleY);
         }
-        
-        // チャートのハイライトを更新
+
+        /**
+         * ペンデュラムに外力を加える
+         */
+        function updatePendulum(linearAccelX, linearAccelY) {
+            // 感度に応じて外力のスケールを非線形に調整
+            const forceScale = 0.1 * Math.pow(sensitivity / 2, 1.2);
+            
+            pendulumForceX += linearAccelY * forceScale;
+            pendulumForceY += -linearAccelX * forceScale;
+            pendulumForceZ += (linearAccelX * forceScale * 0.5);
+        }
+
         function updateChartHighlight(swingX, swingY) {
             const segments = document.querySelectorAll('.chart-segment');
-            if (!segments.length) return;
-            
-            // 振り子の角度から方向を計算
-            const angle = Math.atan2(swingY, swingX) * (180 / Math.PI);
             const distance = Math.sqrt(swingX * swingX + swingY * swingY);
-            
-            // 距離が閾値以上の場合のみハイライト
-            if (distance > 10) {
-                // 角度を0-360度に正規化
-                let normalizedAngle = angle + 90; // 上を0度にする
-                if (normalizedAngle < 0) normalizedAngle += 360;
-                
-                // どのセグメントに対応するか計算（5分割）
-                const segmentIndex = Math.floor(normalizedAngle / 72) % 5;
-                
-                // ハイライトを更新
-                segments.forEach((segment, index) => {
-                    if (index === segmentIndex) {
-                        segment.classList.add('highlight');
-                    } else {
-                        segment.classList.remove('highlight');
-                    }
-                });
-                
-                // 選択されているセグメントのテキストを取得
+
+            segments.forEach(segment => segment.classList.remove('highlight'));
+
+            if (distance > 15) {
+                let angle = Math.atan2(swingY, swingX) * (180 / Math.PI) + 90;
+                if (angle < 0) angle += 360;
+
+                const segmentIndex = Math.floor(angle / 72) % 5;
+                segments[segmentIndex].classList.add('highlight');
+
                 const selectedText = segments[segmentIndex].querySelector('span').textContent;
                 updateDetectionStatus(`${selectedText}を指しています`, 'strong');
+            } else if (stillnessCounter < STILLNESS_THRESHOLD) {
+                // まだ完全に静止していない場合は、ステータスをリセット
+                updateDetectionStatus('動きを検出中...', 'weak');
             } else {
-                // 距離が短い場合はハイライトを解除
-                segments.forEach(segment => {
-                    segment.classList.remove('highlight');
-                });
+                updateDetectionStatus('中心に収束しました', 'none');
             }
         }
 
-        // 探知レベルを更新
         function updateDetectionLevel(changeLevel) {
-            // 感度を適用して探知レベルを計算（基本感度も上げる）
-            detectionLevel = Math.min(changeLevel * 5 * sensitivity, 100);
-            
+            detectionLevel = Math.min(changeLevel * 20 * sensitivity, 100);
             const meterFill = document.getElementById('meterFill');
             const meterText = document.getElementById('meterText');
-            
             if (!meterFill || !meterText) return;
-            
-            // メーターの更新
             meterFill.style.width = detectionLevel + '%';
             meterText.textContent = Math.round(detectionLevel) + '%';
         }
-        
-        // 探知ステータスを更新
+
         function updateDetectionStatus(text, className) {
             const statusDiv = document.getElementById('detectionStatus');
-            if (!statusDiv) return;
-            
-            statusDiv.textContent = text;
-            statusDiv.className = 'detection-status ' + className;
+            if (statusDiv) {
+                statusDiv.textContent = text;
+                statusDiv.className = 'detection-status ' + className;
+            }
         }
 
-        // 加速度データを更新
+        /**
+         * センサーデータ処理の中核
+         */
         function updateSensorData(x, y, z) {
+            // ローパスフィルタで重力ベクトルを推定
+            gravity.x = LPF_ALPHA * gravity.x + (1 - LPF_ALPHA) * x;
+            gravity.y = LPF_ALPHA * gravity.y + (1 - LPF_ALPHA) * y;
+            gravity.z = LPF_ALPHA * gravity.z + (1 - LPF_ALPHA) * z;
+
+            // センサーの値から重力を引いて、動きによる線形加速度を算出
+            const linearAcceleration = {
+                x: x - gravity.x,
+                y: y - gravity.y,
+                z: z - gravity.z
+            };
+
             if (currentTab === 'tilt') {
-                // 傾きセンサータブ
-                // 数値を更新
-                const xEl = document.getElementById('xValue');
-                const yEl = document.getElementById('yValue');
-                const zEl = document.getElementById('zValue');
-                
-                if (xEl) xEl.textContent = x.toFixed(2);
-                if (yEl) yEl.textContent = y.toFixed(2);
-                if (zEl) zEl.textContent = z.toFixed(2);
-                
-                // プログレスバーを更新
+                document.getElementById('xValue').textContent = x.toFixed(2);
+                document.getElementById('yValue').textContent = y.toFixed(2);
+                document.getElementById('zValue').textContent = z.toFixed(2);
                 updateProgressBar('xProgress', x);
                 updateProgressBar('yProgress', y);
-                updateProgressBar('zProgress', z - 9.8); // 重力を補正
-                
-                // 3D表示を更新
+                updateProgressBar('zProgress', z - 9.8);
                 update3DDevice(x, y);
-                
-                // 傾きバブルを更新
                 updateTiltBubble(x, y);
-                
             } else if (currentTab === 'dowsing') {
-                // ダウジングタブ
+                updatePendulum(linearAcceleration.x, linearAcceleration.y);
                 const changeLevel = calculateAccelerationChange(x, y, z);
-                updatePendulum(x, y, changeLevel);
                 updateDetectionLevel(changeLevel);
             }
         }
@@ -1171,77 +1222,51 @@
         // センサー開始
         async function startSensor() {
             log('startSensor関数が呼ばれました');
-            
             const button = document.getElementById('startButton');
             button.disabled = true;
-            
+
             try {
-                // iOS 13以降の権限チェック
                 if (window.DeviceMotionEvent && typeof window.DeviceMotionEvent.requestPermission === 'function') {
                     log('iOS 13+の権限をリクエスト中...');
                     updateStatus('センサーの権限を確認中...', 'waiting');
-                    
                     const permission = await window.DeviceMotionEvent.requestPermission();
-                    log('権限の結果: ' + permission);
-                    
-                    if (permission !== 'granted') {
-                        throw new Error('権限が拒否されました');
-                    }
+                    if (permission !== 'granted') throw new Error('権限が拒否されました');
                 }
-                
-                // イベントリスナーを設定
+
                 if (!isListening) {
                     log('devicemotionイベントリスナーを設定中...');
-                    
                     let eventCount = 0;
                     let lastUpdate = 0;
-                    
-                    window.addEventListener('devicemotion', function(event) {
+
+                    window.addEventListener('devicemotion', (event) => {
                         eventCount++;
-                        
-                        // 初回イベントをログ
                         if (eventCount === 1) {
                             log('最初のイベントを受信！');
-                            document.getElementById('sensorData').classList.add('active');
-                            if (currentTab === 'dowsing') {
-                                document.getElementById('dowsingData').classList.add('active');
-                            }
+                            document.querySelectorAll('.sensor-data').forEach(el => el.classList.add('active'));
                             updateStatus('センサー動作中 🎯', 'success');
                         }
-                        
-                        // 100ms間隔で更新
+
                         const now = Date.now();
                         if (now - lastUpdate < 100) return;
                         lastUpdate = now;
-                        
-                        // 加速度データを取得
+
                         if (event.accelerationIncludingGravity) {
                             const acc = event.accelerationIncludingGravity;
-                            updateSensorData(
-                                acc.x || 0,
-                                acc.y || 0,
-                                acc.z || 0
-                            );
+                            updateSensorData(acc.x || 0, acc.y || 0, acc.z || 0);
                         }
                     });
-                    
+
                     isListening = true;
                     log('リスナー設定完了');
-                    
-                    // 3秒後にイベントが来ているかチェック
-                    setTimeout(function() {
+                    setTimeout(() => {
                         if (eventCount === 0) {
                             log('警告: 3秒経ってもイベントが来ません');
                             updateStatus('センサーが反応しません。デバイスを動かしてみてください', 'error');
-                        } else {
-                            log(`3秒間で${eventCount}個のイベントを受信`);
                         }
                     }, 3000);
                 }
-                
                 button.textContent = '✨ センサー動作中';
                 updateStatus('センサーを起動しました', 'success');
-                
             } catch (error) {
                 log('エラー: ' + error.message);
                 updateStatus('エラー: ' + error.message, 'error');
@@ -1250,28 +1275,28 @@
         }
 
         // 初期化
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             log('ページ読み込み完了');
             logEnvironment();
-            
             const button = document.getElementById('startButton');
-            
-            // DeviceMotionEventが使えるかチェック
+
             if (!window.DeviceMotionEvent) {
                 log('エラー: DeviceMotionEventがサポートされていません');
                 updateStatus('このブラウザは加速度センサーに対応していません', 'error');
                 button.disabled = true;
                 return;
             }
-            
-            // ボタンクリックイベント
-            button.addEventListener('click', function() {
+
+            button.addEventListener('click', () => {
                 log('ボタンがクリックされました');
                 startSensor();
             });
-            
+
+            setInterval(updatePendulumPhysics, 1000 / 60);
+
             log('初期化完了');
         });
     </script>
 </body>
+
 </html>
