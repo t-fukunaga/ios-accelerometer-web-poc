@@ -335,67 +335,204 @@
             text-align: center;
         }
 
-        .dowsing-rods {
-            margin: 40px auto;
-            width: 300px;
-            height: 200px;
+        .pendulum-container {
+            margin: 20px auto;
+            width: 350px;
+            height: 350px;
             position: relative;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-            border-radius: 20px;
+            perspective: 800px;
+        }
+
+        /* ダウジングチャート */
+        .dowsing-chart {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            left: 0;
+            top: 0;
+            transform: rotateX(60deg);
+            transform-style: preserve-3d;
+        }
+
+        .chart-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid #667eea;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, 
+                rgba(255, 255, 255, 0.95) 0%, 
+                rgba(240, 243, 255, 0.9) 40%,
+                rgba(230, 235, 255, 0.85) 100%);
+            box-shadow: 
+                0 10px 30px rgba(102, 126, 234, 0.2),
+                inset 0 2px 10px rgba(102, 126, 234, 0.1);
+        }
+
+        .chart-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 600;
+            font-size: 20px;
+            color: #4a5568;
+            text-shadow: 
+                0 1px 3px rgba(255,255,255,0.9),
+                0 -1px 3px rgba(255,255,255,0.9);
         }
 
-        .rod {
-            position: absolute;
-            width: 4px;
-            height: 80px;
-            background: linear-gradient(180deg, #8B4513 0%, #D2691E 100%);
-            border-radius: 2px;
-            transform-origin: bottom center;
-            transition: transform 0.2s ease-out;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        .chart-segment:nth-child(1) {
+            transform: rotate(0deg) translate(-50%, -50%);
         }
 
-        .rod.left {
-            left: 120px;
-            transform: rotate(-15deg);
+        .chart-segment:nth-child(2) {
+            transform: rotate(72deg) translate(-50%, -50%);
         }
 
-        .rod.right {
-            right: 120px;
-            transform: rotate(15deg);
+        .chart-segment:nth-child(3) {
+            transform: rotate(144deg) translate(-50%, -50%);
         }
 
-        .rod::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 8px;
-            background: #654321;
-            border-radius: 50%;
+        .chart-segment:nth-child(4) {
+            transform: rotate(216deg) translate(-50%, -50%);
         }
 
-        .detection-field {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border: 2px dashed rgba(102, 126, 234, 0.3);
-            border-radius: 50%;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
+        .chart-segment:nth-child(5) {
+            transform: rotate(288deg) translate(-50%, -50%);
+        }
+
+        .chart-segment span {
+            transform: rotate(-60deg);
+            display: block;
+            padding: 25px;
             transition: all 0.3s ease;
         }
 
-        .detection-field.active {
-            opacity: 1;
-            animation: pulse 2s infinite;
+        .chart-segment.highlight span {
+            transform: rotate(-60deg) scale(1.2);
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        /* ペンデュラム */
+        .pendulum {
+            position: absolute;
+            left: 50%;
+            top: 20%;
+            transform: translateX(-50%);
+            transform-style: preserve-3d;
+            z-index: 10;
+        }
+
+        .pendulum-anchor {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #666 0%, #444 100%);
+            border-radius: 50%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .pendulum-chain {
+            position: absolute;
+            width: 1px;
+            height: 180px;
+            left: 50%;
+            top: 5px;
+            transform: translateX(-50%);
+            transform-origin: top center;
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out;
+        }
+
+        .pendulum-chain::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(200,200,200,0.8) 0%, 
+                rgba(150,150,150,0.9) 50%,
+                rgba(100,100,100,1) 100%);
+            box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        }
+
+        .pendulum-weight {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            background: linear-gradient(145deg, 
+                #9b59b6 0%, 
+                #8e44ad 30%, 
+                #6c3483 60%,
+                #5b2c6f 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            box-shadow: 
+                0 8px 20px rgba(107, 52, 131, 0.4),
+                inset 0 -3px 8px rgba(0,0,0,0.2),
+                inset 0 2px 6px rgba(255,255,255,0.3);
+        }
+
+        .pendulum-weight::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255,255,255,0.8) 0%, 
+                rgba(255,255,255,0.4) 40%,
+                transparent 70%);
+            border-radius: 50%;
+            top: 8px;
+            left: 8px;
+        }
+
+        .pendulum-weight::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, 
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.2) 50%,
+                rgba(255,255,255,0) 100%);
+            border-radius: 50%;
+            bottom: 5px;
+            right: 5px;
+            animation: sparkle 2s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .pendulum-shadow {
+            position: absolute;
+            width: 60px;
+            height: 30px;
+            background: radial-gradient(ellipse at center, 
+                rgba(0,0,0,0.4) 0%, 
+                rgba(0,0,0,0.2) 40%,
+                transparent 70%);
+            top: 330px;
+            left: 50%;
+            transform: translateX(-50%) rotateX(90deg);
+            transition: all 0.15s ease-out;
+            filter: blur(2px);
         }
 
         @keyframes pulse {
@@ -407,6 +544,20 @@
                 transform: translate(-50%, -50%) scale(1.1);
                 opacity: 0.6;
             }
+        }
+
+        /* チャートのハイライト表示 */
+        .chart-segment.highlight {
+            background: radial-gradient(circle at center, 
+                rgba(102, 126, 234, 0.3) 0%, 
+                rgba(102, 126, 234, 0.1) 50%,
+                transparent 70%);
+            animation: segmentPulse 1s infinite;
+        }
+
+        @keyframes segmentPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
 
         .detection-meter {
@@ -603,7 +754,7 @@
                 <span class="sensitivity-value" id="sensitivityValue">x2.0</span>
             </div>
             <input type="range" class="sensitivity-slider" id="sensitivitySlider" 
-                   min="0.5" max="5" step="0.1" value="2">
+                   min="0.5" max="25" step="0.1" value="2">
             <div class="sensitivity-description">
                 低感度 ← → 高感度
             </div>
@@ -674,10 +825,23 @@
         <!-- タブ2: ダウジング -->
         <div id="dowsingContent" class="tab-content">
             <div id="dowsingData" class="sensor-data dowsing-container">
-                <div class="dowsing-rods">
-                    <div id="leftRod" class="rod left"></div>
-                    <div id="rightRod" class="rod right"></div>
-                    <div id="detectionField" class="detection-field"></div>
+                <div class="pendulum-container">
+                    <div class="dowsing-chart">
+                        <div class="chart-circle">
+                            <div class="chart-segment"><span>YES</span></div>
+                            <div class="chart-segment"><span>NO</span></div>
+                            <div class="chart-segment"><span>MAYBE</span></div>
+                            <div class="chart-segment"><span>LATER</span></div>
+                            <div class="chart-segment"><span>UNKNOWN</span></div>
+                        </div>
+                    </div>
+                    <div id="pendulum" class="pendulum">
+                        <div class="pendulum-anchor"></div>
+                        <div id="pendulumChain" class="pendulum-chain">
+                            <div class="pendulum-weight"></div>
+                        </div>
+                        <div id="pendulumShadow" class="pendulum-shadow"></div>
+                    </div>
                 </div>
 
                 <div class="detection-meter">
@@ -878,60 +1042,98 @@
             return (avgChange + maxChange) / 2;
         }
 
-        // ダウジングロッドを更新
-        function updateDowsingRods(changeLevel) {
-            const leftRod = document.getElementById('leftRod');
-            const rightRod = document.getElementById('rightRod');
+        // ペンデュラムを更新
+        function updatePendulum(x, y, changeLevel) {
+            const pendulumChain = document.getElementById('pendulumChain');
+            const pendulumShadow = document.getElementById('pendulumShadow');
             
-            if (!leftRod || !rightRod) return;
+            if (!pendulumChain || !pendulumShadow) return;
             
-            // 変化レベルに応じてロッドの角度を調整
-            const baseAngle = 15;
-            const maxAdditionalAngle = 30;
-            const additionalAngle = (changeLevel / 10) * maxAdditionalAngle;
+            // 加速度データに基づいて振り子の動きを計算
+            const maxSwing = 30; // 最大振れ角度
+            const swingX = (x / 10) * maxSwing * sensitivity;
+            const swingY = (y / 10) * maxSwing * sensitivity;
             
-            leftRod.style.transform = `rotate(${-(baseAngle + additionalAngle)}deg)`;
-            rightRod.style.transform = `rotate(${baseAngle + additionalAngle}deg)`;
+            // 変化量に応じて振り子の動きを増幅
+            const amplification = 1 + (changeLevel / 5);
+            const finalSwingX = swingX * amplification;
+            const finalSwingY = swingY * amplification;
+            
+            // 振り子の回転を適用（チェーンの根元を支点として）
+            pendulumChain.style.transform = `rotateX(${finalSwingY}deg) rotateZ(${finalSwingX}deg)`;
+            
+            // 影の位置を更新（振り子の動きに合わせて）
+            const chainLength = 180;
+            const shadowOffsetX = Math.sin(finalSwingX * Math.PI / 180) * chainLength;
+            const shadowOffsetY = Math.sin(finalSwingY * Math.PI / 180) * chainLength * 0.5; // 斜めビューのため調整
+            const shadowScale = 1 - (Math.sqrt(finalSwingX * finalSwingX + finalSwingY * finalSwingY) / 90);
+            
+            pendulumShadow.style.transform = `translateX(calc(-50% + ${shadowOffsetX}px)) translateY(${shadowOffsetY}px) rotateX(90deg) scale(${shadowScale})`;
+            
+            // チャートセグメントのハイライト
+            updateChartHighlight(finalSwingX, finalSwingY);
+        }
+        
+        // チャートのハイライトを更新
+        function updateChartHighlight(swingX, swingY) {
+            const segments = document.querySelectorAll('.chart-segment');
+            if (!segments.length) return;
+            
+            // 振り子の角度から方向を計算
+            const angle = Math.atan2(swingY, swingX) * (180 / Math.PI);
+            const distance = Math.sqrt(swingX * swingX + swingY * swingY);
+            
+            // 距離が閾値以上の場合のみハイライト
+            if (distance > 10) {
+                // 角度を0-360度に正規化
+                let normalizedAngle = angle + 90; // 上を0度にする
+                if (normalizedAngle < 0) normalizedAngle += 360;
+                
+                // どのセグメントに対応するか計算（5分割）
+                const segmentIndex = Math.floor(normalizedAngle / 72) % 5;
+                
+                // ハイライトを更新
+                segments.forEach((segment, index) => {
+                    if (index === segmentIndex) {
+                        segment.classList.add('highlight');
+                    } else {
+                        segment.classList.remove('highlight');
+                    }
+                });
+                
+                // 選択されているセグメントのテキストを取得
+                const selectedText = segments[segmentIndex].querySelector('span').textContent;
+                updateDetectionStatus(`${selectedText}を指しています`, 'strong');
+            } else {
+                // 距離が短い場合はハイライトを解除
+                segments.forEach(segment => {
+                    segment.classList.remove('highlight');
+                });
+            }
         }
 
         // 探知レベルを更新
         function updateDetectionLevel(changeLevel) {
             // 感度を適用して探知レベルを計算（基本感度も上げる）
-            detectionLevel = Math.min(changeLevel * 25 * sensitivity, 100);
+            detectionLevel = Math.min(changeLevel * 5 * sensitivity, 100);
             
             const meterFill = document.getElementById('meterFill');
             const meterText = document.getElementById('meterText');
-            const statusDiv = document.getElementById('detectionStatus');
-            const field = document.getElementById('detectionField');
             
-            if (!meterFill || !meterText || !statusDiv || !field) return;
+            if (!meterFill || !meterText) return;
             
             // メーターの更新
             meterFill.style.width = detectionLevel + '%';
             meterText.textContent = Math.round(detectionLevel) + '%';
+        }
+        
+        // 探知ステータスを更新
+        function updateDetectionStatus(text, className) {
+            const statusDiv = document.getElementById('detectionStatus');
+            if (!statusDiv) return;
             
-            // ステータスの更新
-            let status, statusClass;
-            if (detectionLevel < 10) {
-                status = '何も検出されていません';
-                statusClass = 'none';
-                field.classList.remove('active');
-            } else if (detectionLevel < 30) {
-                status = '弱い反応を検出';
-                statusClass = 'weak';
-                field.classList.add('active');
-            } else if (detectionLevel < 70) {
-                status = '強い反応を検出！';
-                statusClass = 'strong';
-                field.classList.add('active');
-            } else {
-                status = '非常に強い反応！何かあります！';
-                statusClass = 'very-strong';
-                field.classList.add('active');
-            }
-            
-            statusDiv.textContent = status;
-            statusDiv.className = 'detection-status ' + statusClass;
+            statusDiv.textContent = text;
+            statusDiv.className = 'detection-status ' + className;
         }
 
         // 加速度データを更新
@@ -961,7 +1163,7 @@
             } else if (currentTab === 'dowsing') {
                 // ダウジングタブ
                 const changeLevel = calculateAccelerationChange(x, y, z);
-                updateDowsingRods(changeLevel);
+                updatePendulum(x, y, changeLevel);
                 updateDetectionLevel(changeLevel);
             }
         }
