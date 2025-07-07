@@ -25,31 +25,62 @@ No build process is required - just push changes to the main branch.
 
 ### Single-File Structure
 All functionality is contained in `index.html`:
-- Lines 1-706: HTML structure and CSS styles
-- Lines 708-1180: JavaScript implementation
+- Lines 1-721: HTML structure and CSS styles
+- Lines 873-1267: JavaScript implementation
 - No external dependencies in production
 
 ### Core Components
 
 1. **Accelerometer Integration**
    - Uses `DeviceMotionEvent` API with iOS 13+ permission handling
-   - Updates at 100ms intervals for smooth animation
+   - Updates at 100ms intervals for sensor data
    - Requires HTTPS connection on iOS
 
 2. **Two Interactive Modes**
    - **Tilt Sensor**: Real-time 3D device visualization with axis indicators
-   - **Dowsing (Pendulum)**: Physics-based pendulum simulation with chart segments
+   - **Dowsing (Pendulum)**: Advanced physics-based pendulum simulation with chart segments
 
-3. **Key Functions**
+3. **Physics Engine (Pendulum Mode)**
+   - **Damped Oscillation Model**: F = -kx - cv (spring-damper system)
+   - **Gravity Compensation**: Low-pass filter (LPF_ALPHA = 0.8) separates gravity from motion
+   - **3-Axis Motion**: X/Y for main swing, Z for twist rotation
+   - **60fps Physics Updates**: Independent from sensor updates for smooth animation
+   - **Stillness Detection**: Converges to center when device is stationary
+
+4. **Key Functions**
    - `startSensor()`: Handles iOS permission request and initializes accelerometer
-   - `updatePendulum()`: Physics simulation for pendulum movement
+   - `updatePendulumPhysics()`: 60fps physics simulation loop
+   - `updatePendulum()`: Applies external forces from accelerometer
    - `updateChartHighlight()`: Detects which chart segment the pendulum points to
    - `calculateAccelerationChange()`: Tracks motion history for dowsing detection
 
+### Physics System
+
+#### Constants
+```javascript
+const SPRING_CONSTANT = 0.02;      // Restoring force coefficient
+const BASE_DAMPING = 0.98;         // Base damping coefficient
+const BASE_MAX_ANGLE = 60;         // Base maximum swing angle
+const LPF_ALPHA = 0.8;             // Low-pass filter coefficient
+const CENTER_PULL_FORCE = 0.005;   // Force pulling to center when still
+const MOVEMENT_THRESHOLD = 0.05;   // Angular velocity threshold for stillness
+const STILLNESS_THRESHOLD = 15;    // Frames before considered still
+```
+
+#### Gravity Separation
+The system uses a low-pass filter to separate gravity from linear acceleration:
+```javascript
+gravity = LPF_ALPHA * gravity + (1 - LPF_ALPHA) * acceleration;
+linearAcceleration = acceleration - gravity;
+```
+
 ### Sensitivity System
 - Global `sensitivity` variable controls reaction strength (0.5x to 25x)
-- Separate `tiltSensitivity` for tilt mode (half of main sensitivity)
-- Affects both visual feedback and detection thresholds
+- Dynamically adjusts:
+  - Damping coefficient (higher sensitivity = less damping)
+  - Maximum angle (higher sensitivity = larger swings)
+  - Spring constant (higher sensitivity = weaker restoring force)
+  - Force scale (non-linear adjustment for natural feel)
 
 ## iOS-Specific Considerations
 
@@ -75,6 +106,7 @@ The app uses a purple gradient theme (#667eea to #764ba2) with:
 - 3D perspective effects using CSS transforms
 - Pendulum viewed at 60-degree angle for natural appearance
 - Amethyst-colored pendulum weight with realistic shadows
+- Dynamic shadow that changes scale and opacity based on distance
 - Responsive design capped at 500px width for mobile optimization
 
 ## Testing on iOS Devices
@@ -83,15 +115,23 @@ The app uses a purple gradient theme (#667eea to #764ba2) with:
 2. Open in Safari (not Chrome or other browsers)
 3. Grant motion sensor permission when prompted
 4. Device must be physically moved to generate sensor data
+5. Place device flat on table to see gravity compensation and center convergence
 
 ## Common Modifications
 
-When modifying the pendulum physics:
-- Adjust `maxSwing` for maximum pendulum angle
-- Modify `chainLength` for shadow calculations
-- Change `amplification` formula for different sensitivity curves
+### Adjusting Physics Parameters
+- `SPRING_CONSTANT`: Controls how strongly pendulum returns to center
+- `BASE_DAMPING`: Controls how quickly motion stops (air resistance)
+- `BASE_MAX_ANGLE`: Maximum swing angle before clamping
+- `CENTER_PULL_FORCE`: How strongly pendulum pulls to center when still
 
-When updating visual design:
-- All styles are in the `<style>` section (lines 7-706)
+### Modifying Visual Design
+- All styles are in the `<style>` section (lines 8-721)
 - 3D effects use `transform-style: preserve-3d`
 - Animations use CSS transitions for performance
+- Shadow calculations in `updatePendulumDisplay()`
+
+### Changing Sensitivity Behavior
+- Look for `sensitivity` usage in physics calculations
+- Adjust non-linear scaling in `updatePendulum()` force calculation
+- Modify dynamic parameter adjustments in `updatePendulumPhysics()`

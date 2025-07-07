@@ -755,6 +755,55 @@
             margin-top: 8px;
             text-align: center;
         }
+
+        /* === タブ3: 真上から見る === */
+        .top-down-visualizer {
+            margin: 30px auto;
+            width: 300px;
+            height: 300px;
+            position: relative;
+            background: #f0f0f0;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-down-visualizer::before,
+        .top-down-visualizer::after {
+            content: '';
+            position: absolute;
+            background: #ddd;
+        }
+
+        .top-down-visualizer::before {
+            /* Horizontal line */
+            width: 100%;
+            height: 1px;
+            top: 50%;
+            left: 0;
+        }
+
+        .top-down-visualizer::after {
+            /* Vertical line */
+            width: 1px;
+            height: 100%;
+            top: 0;
+            left: 50%;
+        }
+
+        .top-down-bubble {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.5);
+            transition: all 0.1s ease-out;
+            z-index: 1;
+        }
     </style>
 </head>
 
@@ -772,8 +821,9 @@
         </div>
 
         <div class="tabs">
-            <button class="tab active" data-tab="tilt">🔄 傾きセンサー</button>
-            <button class="tab" data-tab="dowsing">🪄 ダウジング</button>
+            <button class="tab" data-tab="tilt">🔄 傾きセンサー</button>
+            <button class="tab active" data-tab="dowsing">🪄 ダウジング</button>
+            <button class="tab" data-tab="topDown">🔭 真上から見る</button>
         </div>
 
         <div id="status" class="status waiting">
@@ -796,7 +846,7 @@
             </div>
         </div>
 
-        <div id="tiltContent" class="tab-content active">
+        <div id="tiltContent" class="tab-content">
             <div id="sensorData" class="sensor-data">
                 <div class="device-visualizer">
                     <div id="device3d" class="device-3d">
@@ -854,7 +904,7 @@
             </div>
         </div>
 
-        <div id="dowsingContent" class="tab-content">
+        <div id="dowsingContent" class="tab-content active">
             <div id="dowsingData" class="sensor-data dowsing-container">
                 <div class="pendulum-container">
                     <div class="dowsing-chart">
@@ -888,11 +938,24 @@
                 </div>
 
                 <div class="info">
-                    💡 デバイスを様々な方向に動かして探知してみてください<br>
-                    動きが大きいほど反応が強くなります
+                    💡 スマホを縦に持ち、地面と垂直に揺らしてみてください<br>
+                    揺れの強さに応じてペンデュラムが反応します
                 </div>
             </div>
         </div>
+
+        <div id="topDownContent" class="tab-content">
+            <div id="topDownData" class="sensor-data">
+                <div class="top-down-visualizer" id="topDownVisualizer">
+                    <div id="topDownBubble" class="top-down-bubble"></div>
+                </div>
+                <div class="info">
+                    💡 ペンデュラムの動きを真上から見た図です。<br>
+                    揺れの方向と大きさが分かります。
+                </div>
+            </div>
+        </div>
+
 
         <div class="info">
             💡 デバイスを様々な方向に動かしてみてください<br>
@@ -905,10 +968,10 @@
         let debugLog = [];
         let isListening = false;
         let debugVisible = false;
-        let currentTab = 'tilt';
+        let currentTab = 'dowsing'; // デフォルトをダウジングに変更
 
         // 加速度データの履歴（ダウジング用）
-        let accelerationHistory = [];
+        let linearAccelerationHistory = []; // 線形加速度の履歴を保存
         let detectionLevel = 0;
 
         // 感度設定
@@ -1024,23 +1087,29 @@
         }
 
         // === ダウジング関連 ===
-        function calculateAccelerationChange(newX, newY, newZ) {
-            accelerationHistory.push({ x: newX, y: newY, z: newZ, time: Date.now() });
+        /**
+         * @description 線形加速度（重力を除いた動き）の変化量を計算する
+         * @param {object} linearAccel - {x, y, z} の線形加速度オブジェクト
+         * @returns {number} - 単位時間あたりの加速度変化の大きさ
+         */
+        function calculateMotionMagnitude(linearAccel) {
+            linearAccelerationHistory.push({ ...linearAccel, time: Date.now() });
             const timeLimit = Date.now() - 500;
-            accelerationHistory = accelerationHistory.filter(data => data.time > timeLimit);
-            if (accelerationHistory.length < 2) return 0;
+            linearAccelerationHistory = linearAccelerationHistory.filter(data => data.time > timeLimit);
+            if (linearAccelerationHistory.length < 2) return 0;
 
             let totalChange = 0;
-            for (let i = 1; i < accelerationHistory.length; i++) {
-                const prev = accelerationHistory[i - 1];
-                const curr = accelerationHistory[i];
+            for (let i = 1; i < linearAccelerationHistory.length; i++) {
+                const prev = linearAccelerationHistory[i - 1];
+                const curr = linearAccelerationHistory[i];
                 const deltaX = curr.x - prev.x;
                 const deltaY = curr.y - prev.y;
                 const deltaZ = curr.z - prev.z;
                 totalChange += Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
             }
-            return totalChange / (accelerationHistory.length - 1);
+            return totalChange / (linearAccelerationHistory.length - 1);
         }
+
 
         /**
          * 物理シミュレーションを更新 (60fpsで呼び出される)
@@ -1096,6 +1165,7 @@
                 pendulumAngleX *= scale;
                 pendulumAngleY *= scale;
             }
+            pendulumAngleZ = Math.max(-90, Math.min(90, pendulumAngleZ)); // 捻り角度を制限
 
             // 外力を徐々に減衰させる
             pendulumForceX *= 0.9;
@@ -1114,7 +1184,7 @@
             const pendulumShadow = document.getElementById('pendulumShadow');
             if (!pendulumChain || !pendulumShadow) return;
 
-            // 2軸の回転を適用
+            // 3軸の回転を適用（Z軸の捻りを追加）
             pendulumChain.style.transform = `rotateX(${pendulumAngleY}deg) rotateY(${-pendulumAngleX}deg) rotateZ(${pendulumAngleZ}deg)`;
 
             // 影の位置を計算
@@ -1133,18 +1203,26 @@
 
             // チャートハイライト
             updateChartHighlight(pendulumAngleX, pendulumAngleY);
+
+            // 真上視点を更新
+            updateTopDownView(pendulumAngleX, pendulumAngleY);
         }
 
         /**
          * ペンデュラムに外力を加える
+         * スマホを縦持ちした際の、地面に対する水平方向の動き(X, Z)をペンデュラムのXY平面の振れに、
+         * 垂直方向の動き(Y)をペンデュラムの捻りにマッピングする
          */
-        function updatePendulum(linearAccelX, linearAccelY) {
+        function updatePendulum(linearAccel) {
             // 感度に応じて外力のスケールを非線形に調整
             const forceScale = 0.1 * Math.pow(sensitivity / 2, 1.2);
-            
-            pendulumForceX += linearAccelY * forceScale;
-            pendulumForceY += -linearAccelX * forceScale;
-            pendulumForceZ += (linearAccelX * forceScale * 0.5);
+
+            // X軸の加速度（左右の揺れ）を、ペンデュラムのX軸の力（左右の振り）に変換
+            pendulumForceX += linearAccel.x * forceScale;
+            // Z軸の加速度（地面に対して前後）を、ペンデュラムのY軸の力（前後の振り）に変換
+            pendulumForceY += linearAccel.z * forceScale;
+            // Y軸の加速度（地面に対して上下）を、ペンデュラムのZ軸の力（捻り）に変換
+            pendulumForceZ += linearAccel.y * forceScale * 0.5;
         }
 
         function updateChartHighlight(swingX, swingY) {
@@ -1188,6 +1266,20 @@
         }
 
         /**
+         * 真上視点のバブルの位置を更新する
+         */
+        function updateTopDownView(angleX, angleY) {
+            const bubble = document.getElementById('topDownBubble');
+            if (!bubble) return;
+            // 表示エリアの半径 - バブルの半径 = 150 - 15 = 135
+            const maxOffset = 135;
+            // 振れの角度を-1 ~ 1の範囲に正規化し、オフセットを計算
+            const offsetX = (angleX / BASE_MAX_ANGLE) * maxOffset;
+            const offsetY = (angleY / BASE_MAX_ANGLE) * maxOffset;
+            bubble.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+        }
+
+        /**
          * センサーデータ処理の中核
          */
         function updateSensorData(x, y, z) {
@@ -1212,10 +1304,11 @@
                 updateProgressBar('zProgress', z - 9.8);
                 update3DDevice(x, y);
                 updateTiltBubble(x, y);
-            } else if (currentTab === 'dowsing') {
-                updatePendulum(linearAcceleration.x, linearAcceleration.y);
-                const changeLevel = calculateAccelerationChange(x, y, z);
-                updateDetectionLevel(changeLevel);
+            } else if (currentTab === 'dowsing' || currentTab === 'topDown') {
+                // ダウジングと真上視点は同じ物理モデルを共有
+                updatePendulum(linearAcceleration);
+                const motionMagnitude = calculateMotionMagnitude(linearAcceleration);
+                updateDetectionLevel(motionMagnitude);
             }
         }
 
@@ -1292,6 +1385,7 @@
                 startSensor();
             });
 
+            // 物理シミュレーションのループを開始
             setInterval(updatePendulumPhysics, 1000 / 60);
 
             log('初期化完了');
